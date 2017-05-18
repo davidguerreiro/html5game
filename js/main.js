@@ -1,5 +1,5 @@
 
-var PlayState : {};
+PlayState = {};
 
 // init phaser
 window.onload = function () {
