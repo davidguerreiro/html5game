@@ -5,6 +5,7 @@ function Hero( game, x, y ) {
 
 	// class Phaser.Sprite constructor
 	Phaser.Sprite.call( this, game, x, y, 'hero' );
+	this.anchor.set( 0.5, 0.5 );
 
 }
 
@@ -12,7 +13,35 @@ function Hero( game, x, y ) {
 Hero.prototype             = Object.create( Phaser.Sprite.prototype );
 Hero.prototype.constructor =  Hero;
 
+Hero.prototype.move = function( direction ) {
+	this.x += direction * 2.5; // 2.5 pixels each frame
+};
+
 PlayState = {};
+
+// playstate init
+PlayState.init = function() {
+  this.keys = this.game.input.keyboard.addKeys({
+     left : Phaser.KeyCode.LEFT,
+     right : Phaser.KeyCode.RIGHT
+  });
+};
+
+// update game state
+PlayState.update = function() {
+	this._handleInput();
+}
+
+// this state submethod handles the inputs
+PlayState._handleInput = function() {
+
+	if( this.keys.left.isDown ) { // move hero left ( -  2.5 )
+		this.hero.move( -1 );
+	}
+	else if ( this.keys.right.isDown ) {
+		this.hero.move( 1 ); // move hero rigth ( 2.5 )
+	}
+}
 
 // load game assets here
 PlayState.preload = function() {
