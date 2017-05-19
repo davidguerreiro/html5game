@@ -35,13 +35,22 @@ Hero.prototype.move = function( direction ) {
 	
 };
 
+/**
+ * Jump hero move
+ */
+Hero.prototype.jump = function() {
+	const JUMP_SPEED = 600;
+	this.body.velocity.y = -JUMP_SPEED;
+};
+
 PlayState = {};
 
 // playstate init
 PlayState.init = function() {
   this.keys = this.game.input.keyboard.addKeys({
-     left : Phaser.KeyCode.LEFT,
-     right : Phaser.KeyCode.RIGHT
+     left  : Phaser.KeyCode.LEFT,
+     right : Phaser.KeyCode.RIGHT,
+     up    : Phaser.KeyCode.UP
   });
 
   this.game.renderer.renderSession.roundPixels = true;
@@ -63,6 +72,9 @@ PlayState._handleCollisions = function() {
 // this state submethod handles the inputs
 PlayState._handleInput = function() {
 
+	/**
+	 * Movement
+	 */
 	if( this.keys.left.isDown ) { // move hero left ( -  2.5 )
 		this.hero.move( -1 );
 	}
@@ -73,6 +85,17 @@ PlayState._handleInput = function() {
 		// stop -- only neccesary when moving items using physics
 		this.hero.move( 0 ); // stop hero when we the key is unpressed
 	}
+  
+  /**
+   * Jump
+   *
+   * we do not check which key is pressed, we listen for 
+   * the key to be pressed and then we tigger the hero jump method
+   */
+  this.keys.up.onDown.add( function() {
+    this.hero.jump();
+  }, this);
+   
 }
 
 // load game assets here
