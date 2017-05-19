@@ -127,7 +127,7 @@ PlayState._loadLevel = function( data ) {
 
 // spawn platforms from data coming from the JSON file
 PlayState._spawnPlatform = function( platform ) {
-	let sprite = this.platform.create(
+	let sprite = this.platforms.create(
 		platform.x, platform.y, platform.image 
 	);
 
