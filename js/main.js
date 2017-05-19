@@ -84,7 +84,7 @@ Spider.prototype.update = function() {
 	//check againsts the walls and reverse direction if neccesary
 	if( this.body.touching.right || this.body.blocked.right ) 
 		this.velocity.x = -Spider.SPEED;  // turn left
-	else if( this.body.touching.left || this.bodd.blocked.left )
+	else if( this.body.touching.left || this.body.blocked.left )
 		this.velocity.x = Spider.SPEED;  // turn right
 
 };
