@@ -59,11 +59,13 @@ PlayState.init = function() {
   });
   
   // activate sound when jumping
+  
   this.keys.up.onDown.add( function() {
     let didJump = this.hero.jump();
     if( didJump )
     	this.sfx.jump.play();
-  }. this ); 
+  }, this ); 
+
 
   this.game.renderer.renderSession.roundPixels = true;
 };
@@ -137,7 +139,7 @@ PlayState.create = function() {
 
 	// create sound entities
 	this.sfx = {
-		jump : this.game.add.audio( 'sfx:jump' );
+		jump : this.game.add.audio( 'sfx:jump' )
 	};
 
 	// create background image
