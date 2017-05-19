@@ -58,6 +58,10 @@ PlayState._handleInput = function() {
 	else if ( this.keys.right.isDown ) {
 		this.hero.move( 1 ); // move hero rigth ( 2.5 )
 	}
+	else {
+		// stop -- only neccesary when moving items using physics
+		this.hero.move( 0 ); // stop hero when we the key is unpressed
+	}
 }
 
 // load game assets here
