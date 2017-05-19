@@ -80,7 +80,7 @@ Hero.prototype.jump = function() {
  * Add bounce method to class Hero
  */
 Hero.prototype.bounce = function() {
-	const BOUNCE_SPEED = 200;
+	const BOUNCE_SPEED   = 200;
 	this.body.velocity.y = -BOUNCE_SPEED;
 }
 
@@ -95,6 +95,17 @@ Spider.prototype.update = function() {
 	else if( this.body.touching.left || this.body.blocked.left )
 		this.body.velocity.x = Spider.SPEED;  // turn right
 
+};
+
+/**
+ * Spider death
+ */
+Spider.prototype.die = function() {
+	this.body.enable = false;
+
+	this.animations.play( 'die').onComplete.addOnce( function() {
+    this.kill();
+	}, this);
 };
 
 PlayState = {};
@@ -186,7 +197,7 @@ PlayState._onHeroVsEnemy = function( hero, enemy ) {
   // kill enemies when the hero is failing
   if( hero.body.velocity.y > 0 ) {
   	hero.bounce();
-  	enemy.kill();
+  	enemy.die();
   	this.sfx.stomp.play();   // dispaly the stomp sound
   }
   else {
