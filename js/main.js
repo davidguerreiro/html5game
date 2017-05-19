@@ -49,8 +49,16 @@ PlayState.init = function() {
 
 // update game state
 PlayState.update = function() {
+  // handle collisions
+  this._handleCollisions();
+	// handle key inputs
 	this._handleInput();
 }
+
+// manage collisions
+PlayState._handleCollisions = function() {
+	this.game.physics.arcade.collide( this.hero, this.platforms );
+};
 
 // this state submethod handles the inputs
 PlayState._handleInput = function() {
@@ -102,15 +110,32 @@ PlayState.create = function() {
  */
 PlayState._loadLevel = function( data ) {
 
+	const GRAVITY = 1200;
+
+	// create all the groups / layers that we need
+	this.platforms = this.game.add.group();
+
 	// spawn all platforms
 	data.platforms.forEach( this._spawnPlatform, this );
 
 	// spawn hero and enemies
 	this._spawnCharacters( { hero: data.hero } );
+
+	// enable gravity here
+	this.game.physics.arcade.gravity.y = GRAVITY;
 };
 
 // spawn platforms from data coming from the JSON file
 PlayState._spawnPlatform = function( platform ) {
+	let sprite = this.platform.create(
+		platform.x, platform.y, platform.image )
+	);
+
+  this.game.physics.enable( sprite );
+
+	/**
+	 * Old code before the physics were enabled
+	 */
 	this.game.add.sprite( platform.x, platform.y, platform.image );
 }
 
