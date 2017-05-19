@@ -77,6 +77,14 @@ Hero.prototype.jump = function() {
 };
 
 /**
+ * Add bounce method to class Hero
+ */
+Hero.prototype.bounce = function() {
+	const BOUNCE_SPEED = 200;
+	this.body.velocity.y = -BOUNCE_SPEED;
+}
+
+/**
  * Spiders turaround
  */
 Spider.prototype.update = function() {
@@ -170,12 +178,22 @@ PlayState._handleInput = function() {
 
 // battle between the hero and the spiders. This event is tiggered when they overlap each other
 PlayState._onHeroVsEnemy = function( hero, enemy ) {
-
-	// display stomp sounds when they collide
-	this.sfx.stomp.play();
   
-  // reset the game
-  this.game.state.restart();
+  /**
+   * Hero kills enemies when failling . To detect if is failling
+   * we need to check the velocity in coordinate y
+   */
+  // kill enemies when the hero is failing
+  if( hero.body.velocity.y > 0 ) {
+  	hero.bounce();
+  	enemy.kill();
+  	this.sfx.stomp.play();   // dispaly the stomp sound
+  }
+  else {
+  	//game over -> restart the game
+    this.sfx.stomp.play(); 
+    this.game.state.restart();
+  }
 
 };
 
