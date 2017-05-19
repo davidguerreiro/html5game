@@ -80,7 +80,12 @@ PlayState.update = function() {
 
 // manage collisions
 PlayState._handleCollisions = function() {
+
+	// add collision between the hero and the platform
 	this.game.physics.arcade.collide( this.hero, this.platforms );
+
+	// ad overlaìng between the hero and the coins
+  this.game.physics.arcade.overlap( this.hero, this.coins, this._onHeroVsCoin, null, this );
 };
 
 // this state submethod handles the inputs
@@ -110,7 +115,11 @@ PlayState._handleInput = function() {
     this.hero.jump();
   }, this);
    
-}
+};
+
+PlayState._onHeroVsCoin = function( hero, coin ) {
+	coin.kill();
+};
 
 // load game assets here
 PlayState.preload = function() {
@@ -132,6 +141,9 @@ PlayState.preload = function() {
 
   // audio
   this.game.load.audio( 'sfx:jump', 'audio/jump.wav' );
+
+  // coins
+  this.game.load.spritesheet( 'coin', 'images/coin_animated.png', 22, 22 );
 };
 
 // create game entities and set up world here
@@ -159,15 +171,34 @@ PlayState._loadLevel = function( data ) {
 
 	// create all the groups / layers that we need
 	this.platforms = this.game.add.group();
+	this.coins     = this.game.add.group();
 
 	// spawn all platforms
 	data.platforms.forEach( this._spawnPlatform, this );
 
 	// spawn hero and enemies
-	this._spawnCharacters( { hero: data.hero } );
+	this._spawnCharacters( { hero: data.hero, spiders: data.spiders } );
+
+	// spawn important objects
+  data.coins.forEach( this._spawnCoin, this );
 
 	// enable gravity here
 	this.game.physics.arcade.gravity.y = GRAVITY;
+};
+
+// spawn coins
+PlayState._spawnCoin = function( coin ) {
+	let sprite = this.coins.create( coin.x, coin.y, 'coin' );
+	sprite.anchor.set( 0.5, 0.5 );
+
+	// add animations to coins
+	sprite.animations.add( 'rotate',  [0, 1, 2, 1], 6, true ); // 6 fps, looped
+	sprite.animations.play( 'rotate' );
+
+	// give physics to coins
+	this.game.physics.enable( sprite );
+	sprite.body.allowGravity = false;
+
 };
 
 // spawn platforms from data coming from the JSON file
@@ -183,7 +214,6 @@ PlayState._spawnPlatform = function( platform ) {
 
   // make the platform innmovable so the hero cannot move them
   sprite.body.immovable = true;
-  console.log( sprite.body );
 
 	/**
 	 * Old code before the physics were enabled
