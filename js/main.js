@@ -40,7 +40,12 @@ Hero.prototype.move = function( direction ) {
  */
 Hero.prototype.jump = function() {
 	const JUMP_SPEED = 600;
-	this.body.velocity.y = -JUMP_SPEED;
+	let canJump      = this.body.touching.down;
+
+	if( canJump ) 
+	  this.body.velocity.y = -JUMP_SPEED;
+
+	return canJump;
 };
 
 PlayState = {};
@@ -52,6 +57,13 @@ PlayState.init = function() {
      right : Phaser.KeyCode.RIGHT,
      up    : Phaser.KeyCode.UP
   });
+  
+  // activate sound when jumping
+  this.keys.up.onDown.add( function() {
+    let didJump = this.hero.jump();
+    if( didJump )
+    	this.sfx.jump.play();
+  }. this ); 
 
   this.game.renderer.renderSession.roundPixels = true;
 };
@@ -115,10 +127,18 @@ PlayState.preload = function() {
   this.game.load.image('grass:4x1', 'images/grass_4x1.png');
   this.game.load.image('grass:2x1', 'images/grass_2x1.png');
   this.game.load.image('grass:1x1', 'images/grass_1x1.png');
+
+  // audio
+  this.game.load.audio( 'sfx:jump', 'audio/jump.wav' );
 };
 
 // create game entities and set up world here
 PlayState.create = function() {
+
+	// create sound entities
+	this.sfx = {
+		jump : this.game.add.audio( 'sfx:jump' );
+	};
 
 	// create background image
 	this.game.add.image( 0, 0, 'background' );
