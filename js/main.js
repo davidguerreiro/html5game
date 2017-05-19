@@ -133,10 +133,17 @@ PlayState._spawnPlatform = function( platform ) {
 
   this.game.physics.enable( sprite );
 
+  // do not allow gravity for platforms
+  sprite.body.allowGravity = false;
+
+  // make the platform innmovable so the hero cannot move them
+  sprite.body.immovable = true;
+  console.log( sprite.body );
+
 	/**
 	 * Old code before the physics were enabled
 	 */
-	this.game.add.sprite( platform.x, platform.y, platform.image );
+	// this.game.add.sprite( platform.x, platform.y, platform.image );
 }
 
 // spawn hero and enemies data coming from the JSON file
