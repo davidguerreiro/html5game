@@ -23,7 +23,7 @@ Hero.prototype.move = function( direction ) {
 	 * Body does not work if physis are not enabled
 	 */
   const SPEED = 200;
-  this.body.valocity.x = direction * SPEED;
+  this.body.velocity.x = direction * SPEED;
 
 	/**
 	 * Basic movement by frames
