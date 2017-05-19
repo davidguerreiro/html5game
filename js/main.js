@@ -133,6 +133,10 @@ PlayState._handleCollisions = function() {
 
   // add collision between the spiders and the invisible walls
   this.game.physics.arcade.collide( this.spiders, this.enemyWalls );
+
+  // add overlap when hero and spiders collide each other
+  this.game.physics.arcade.overlap( this.hero, this.spiders, this._onHeroVsEnemy, null, this );
+
 };
 
 // this state submethod handles the inputs
@@ -164,6 +168,17 @@ PlayState._handleInput = function() {
    
 };
 
+// battle between the hero and the spiders. This event is tiggered when they overlap each other
+PlayState._onHeroVsEnemy = function( hero, enemy ) {
+
+	// display stomp sounds when they collide
+	this.sfx.stomp.play();
+  
+  // reset the game
+  this.game.state.restart();
+
+};
+
 // load game assets here
 PlayState.preload = function() {
 
@@ -186,6 +201,7 @@ PlayState.preload = function() {
   // audio
   this.game.load.audio( 'sfx:jump', 'audio/jump.wav' );
   this.game.load.audio( 'sfx:coin', 'audio/coin.wav' );
+  this.game.load.audio( 'sfx:stomp', 'audio/stomp.wav' );
 
   // coins
   this.game.load.spritesheet( 'coin', 'images/coin_animated.png', 22, 22 );
@@ -201,7 +217,8 @@ PlayState.create = function() {
 	// create sound entities
 	this.sfx = {
 		jump : this.game.add.audio( 'sfx:jump' ),
-		coin : this.game.add.audio( 'sfx:coin' )
+		coin : this.game.add.audio( 'sfx:coin' ),
+		stomp : this.game.add.audio( 'sfx:stomp' )
 	};
 
 	// create background image
