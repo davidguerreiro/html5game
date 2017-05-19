@@ -7,6 +7,9 @@ function Hero( game, x, y ) {
 	Phaser.Sprite.call( this, game, x, y, 'hero' );
 	this.anchor.set( 0.5, 0.5 );
 
+	// enable physics for the hero
+	this.game.physics.enable( this );
+
 }
 
 // inherit from Phaser.Sprite
@@ -14,7 +17,19 @@ Hero.prototype             = Object.create( Phaser.Sprite.prototype );
 Hero.prototype.constructor =  Hero;
 
 Hero.prototype.move = function( direction ) {
-	this.x += direction * 2.5; // 2.5 pixels each frame
+
+	/**
+	 * Direction is the key pressed. Keys must be registered
+	 * Body does not work if physis are not enabled
+	 */
+  const SPEED = 200;
+  this.body.valocity.x = direction * SPEED;
+
+	/**
+	 * Basic movement by frames
+	 */
+	// this.x += direction * 2.5; // 2.5 pixels each frame
+	
 };
 
 PlayState = {};
@@ -25,6 +40,8 @@ PlayState.init = function() {
      left : Phaser.KeyCode.LEFT,
      right : Phaser.KeyCode.RIGHT
   });
+
+  this.game.renderer.renderSession.roundPixels = true;
 };
 
 // update game state
