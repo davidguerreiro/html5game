@@ -10,6 +10,9 @@ function Hero( game, x, y ) {
 	// enable physics for the hero
 	this.game.physics.enable( this );
 
+	// avoid hero to go out of the canvas element
+	this.body.collideWorldBounds = true;
+
 }
 
 // inherit from Phaser.Sprite
