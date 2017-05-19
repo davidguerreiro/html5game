@@ -117,10 +117,6 @@ PlayState._handleInput = function() {
    
 };
 
-PlayState._onHeroVsCoin = function( hero, coin ) {
-	coin.kill();
-};
-
 // load game assets here
 PlayState.preload = function() {
 
@@ -141,6 +137,7 @@ PlayState.preload = function() {
 
   // audio
   this.game.load.audio( 'sfx:jump', 'audio/jump.wav' );
+  this.game.load.audio( 'sfx:coin', 'audio/coin.wav' );
 
   // coins
   this.game.load.spritesheet( 'coin', 'images/coin_animated.png', 22, 22 );
@@ -151,7 +148,8 @@ PlayState.create = function() {
 
 	// create sound entities
 	this.sfx = {
-		jump : this.game.add.audio( 'sfx:jump' )
+		jump : this.game.add.audio( 'sfx:jump' ),
+		coin : this.game.add.audio( 'sfx:coin' )
 	};
 
 	// create background image
@@ -227,6 +225,12 @@ PlayState._spawnCharacters = function( data ) {
 	// spawn hero
 	this.hero = new Hero( this.game, data.hero.x, data.hero.y );
 	this.game.add.existing( this.hero );
+};
+
+// tiggered when the hero overlaps a coin
+PlayState._onHeroVsCoin = function( hero, coin ) {
+	this.sfx.coin.play();
+	coin.kill();
 };
 
 // init phaser
