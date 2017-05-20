@@ -157,7 +157,8 @@ Spider.prototype.die = function() {
 	}, this);
 };
 
-PlayState = {};
+PlayState         = {};
+const LEVEL_COUNT = 2;
 
 // playstate init
 PlayState.init = function() {
@@ -182,6 +183,9 @@ PlayState.init = function() {
 
   // store key possesed status
   this.hasKey = false;
+
+  // check when the game is complete
+  this.level = ( data.level || 0 ) % LEVEL_COUNT;
 };
 
 // update game state
@@ -304,8 +308,11 @@ PlayState.preload = function() {
 	// preload background image
 	this.game.load.image( 'background', 'images/background.png' );
 
-  // load level 1 data
+  // load levels
+  this.game.load.json( 'level:0', 'data/level00.json' );
   this.game.load.json( 'level:1', 'data/level01.json' );
+
+  // load level terrain dat
   this.game.load.image( 'ground', 'images/ground.png' );
 	this.game.load.image( 'grass:8x1', 'images/grass_8x1.png' );
 	this.game.load.image( 'grass:6x1', 'images/grass_6x1.png' );
@@ -360,8 +367,10 @@ PlayState.create = function() {
 	// create background image
 	this.game.add.image( 0, 0, 'background' );
 
-	// create level 1 data
-	this._loadLevel( this.game.cache.getJSON( 'level:1' ) );
+	// create level data
+	// original level 1 data is commented. Now we load the leves dinamycally
+	// this._loadLevel( this.game.cache.getJSON( 'level:1' ) );
+	thisthis._loadLevel(this.game.cache.getJSON(`level:${this.level}`));
 
 	// add Hud
 	this._createHud();
@@ -547,7 +556,24 @@ PlayState._onHeroVsCoin = function( hero, coin ) {
 
 // init phaser
 window.onload = function () {
+
+	  // load a new game using phaser
     let game = new Phaser.Game( 960, 600, Phaser.AUTO, 'game');
+
+    /**
+     * Add a game to the game state
+     *
+     * This PlayState controls all the game aspects
+     */
     game.state.add( 'play', PlayState );
-    game.state.start( 'play' );
+    
+    /**
+     * Init game
+     * Second parameter is to keep all the files loaded in the cache memory
+     * Third parameter is to remove world objects and entities 
+     * (those who has a physical 'body')
+     * Fourth is the current level object. 
+     * Level 0 is the first level the player inits the game
+     */
+    game.state.start( 'play', true, false, { level : 0 } );
 };
