@@ -370,7 +370,7 @@ PlayState.create = function() {
 	// create level data
 	// original level 1 data is commented. Now we load the leves dinamycally
 	// this._loadLevel( this.game.cache.getJSON( 'level:1' ) );
-	thisthis._loadLevel(this.game.cache.getJSON(`level:${this.level}`));
+	this._loadLevel(this.game.cache.getJSON(`level:${this.level}`));
 
 	// add Hud
 	this._createHud();
