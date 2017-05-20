@@ -224,8 +224,7 @@ PlayState._handleCollisions = function() {
   	function ( hero, door ) {
       return this.hasKey && hero.body.touching.down;
   	}, 
-  	this
-  );
+  	this );
 
 };
 
@@ -287,7 +286,7 @@ PlayState._onHeroVsKey = function( hero, key ) {
 }
 
 // logic when the hero overlaps the door - so the door opens
-PlayState.__onHeroVsDoor = function( hero, door ) {
+PlayState._onHeroVsDoor = function( hero, door ) {
 	this.sfx.door.play();
 	this.game.state.restart();
 	// TODO : go to the next level instead
