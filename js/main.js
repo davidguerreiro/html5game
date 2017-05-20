@@ -89,7 +89,7 @@ Hero.prototype.move = function( direction ) {
 	if( this.body.velocity.x < 0 )
 		this.scale.x = -1;
 	else if ( this.body.velocity.x > 0 )
-    this.scale.x = 1;
+    this.scale.x = 1;	
 	
 };
 
@@ -297,6 +297,9 @@ PlayState.preload = function() {
   // spiders
   this.game.load.spritesheet( 'spider', 'images/spider.png', 42, 32 );
 
+  // door
+  this.game.load.spritesheet( 'door', 'images/door.png', 42, 66 );
+
 };
 
 // create game entities and set up world here
@@ -328,10 +331,11 @@ PlayState._loadLevel = function( data ) {
 	const GRAVITY = 1200;
 
 	// create all the groups / layers that we need
-	this.platforms  = this.game.add.group();
-	this.coins      = this.game.add.group();
-	this.spiders    = this.game.add.group(); 
-	this.enemyWalls = this.game.add.group();
+	this.bgDecoration = this.game.add.group();
+	this.platforms    = this.game.add.group();
+	this.coins        = this.game.add.group();
+	this.spiders      = this.game.add.group(); 
+	this.enemyWalls   = this.game.add.group();
 
 	// spawn all platforms
 	data.platforms.forEach( this._spawnPlatform, this );
@@ -341,6 +345,7 @@ PlayState._loadLevel = function( data ) {
 
 	// spawn important objects
   data.coins.forEach( this._spawnCoin, this );
+  this._spawnDoor( data.door.x, data.door.y );
 
 	// enable gravity here
 	this.game.physics.arcade.gravity.y = GRAVITY;
@@ -446,6 +451,16 @@ PlayState._spawnCharacters = function( data ) {
 	// spawn hero
 	this.hero = new Hero( this.game, data.hero.x, data.hero.y );
 	this.game.add.existing( this.hero );
+};
+
+// spawn door and add physics to it
+PlayState._spawnDoor = function( x, y ) {
+	this.door = this.bgDecoration.create( x, y, 'door' );
+	this.door.anchor.setTo( 0.5, 1);
+
+   // enable physics
+   this.game.physics.enable( this.door );
+   this.door.body.allowGravity = false;
 };
 
 // tiggered when the hero overlaps a coin
