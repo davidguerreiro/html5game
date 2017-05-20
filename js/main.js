@@ -193,6 +193,9 @@ PlayState.update = function() {
 	this._handleInput();
 	// update coin count when the player collects a coin
 	this.coinFont.text = 'x' + this.coinPickupCount;
+
+	// display the key icon if the player has the icon
+	this.keyIcon.frame = this.hasKey ? 1 : 0;
 }
 
 // manage collisions
@@ -215,6 +218,14 @@ PlayState._handleCollisions = function() {
 
   // add overlap between the hero and the key
   this.game.physics.arcade.overlap( this.hero, this.key, this._onHeroVsKey, null, this );
+
+  // add overlap between the hero and the door to check if the door can be open
+  this.game.physics.arcade.overlap( this.hero, this.door, this._onHeroVsDoor,
+  	function ( hero, door ) {
+      return this.hasKey && hero.body.touching.down;
+  	}, 
+  	this
+  );
 
 };
 
@@ -268,11 +279,18 @@ PlayState._onHeroVsEnemy = function( hero, enemy ) {
 
 };
 
-// method which defines the logic when the hero overlaps the key - so the key is picked up
+// logic when the hero overlaps the key - so the key is picked up
 PlayState._onHeroVsKey = function( hero, key ) {
 	this.sfx.key.play();
 	key.kill();
 	this.hasKey = true;
+}
+
+// logic when the hero overlaps the door - so the door opens
+PlayState.__onHeroVsDoor = function( hero, door ) {
+	this.sfx.door.play();
+	this.game.state.restart();
+	// TODO : go to the next level instead
 }
 
 // load game assets here
@@ -322,6 +340,9 @@ PlayState.preload = function() {
 
   // key
   this.game.load.image( 'key', 'images/key.png' );
+
+  // key icon for HUD
+  this.game.load.spritesheet( 'icon:key', 'images/key_icon.png', 34, 30 );
 
 };
 
@@ -394,7 +415,15 @@ PlayState._createHud = function() {
 
  // make the game to create the image using the icon coin.
  // The parameters are the screen coordinates
- let coinIcon      = this.game.make.image( 0 , 0, 'icon:coin' );
+ // original coin Icon coordenates removed when the key icon was added
+ // let coinIcon      = this.game.make.image( 0 , 0, 'icon:coin' );
+   let coinIcon = this.game.make.image( this.keyIcon.width + 7, 0, 'icon:coin' );
+
+ /**
+  * Add key icon
+  */
+ this.keyIcon = this.game.make.image( 0, 19, 'icon:key' );
+ this.keyIcon.anchor.set( 0, 0.5 );
 
  /**
   * Make the game to add the score image
@@ -404,12 +433,15 @@ PlayState._createHud = function() {
  let coinScoreImg  = this.game.make.image( coinIcon.x + coinIcon.width, coinIcon.height / 2, 
  	                   this.coinFont );
  coinScoreImg.anchor.set( 0 , 0.5 );
-
+ 
+ /**
+  * Add element to game HUD
+  */
  this.hud = this.game.add.group();
  this.hud.add( coinIcon );
  this.hud.position.set( 10, 10 );
  this.hud.add( coinScoreImg );
-
+ this.huD.add( this.keyIcon );
 
 };
 
@@ -497,6 +529,14 @@ PlayState._spawnKey = function( x, y ) {
 	// enable physics
 	this.game.physics.enable( this.key );
 	this.key.body.allowGravity = false;
+
+	// add an small 'up & down' animation via tween
+	this.key.y -= 3;
+	this.game.add.tween( this.key )
+	 .to( { y: this.key.y + 6 }, 800. Phaser.Easing.Sinusoidal.InOut )
+	 .yoyo( true )
+	 .loop()
+	 .start();
 };
 
 // tiggered when the hero overlaps a coin
