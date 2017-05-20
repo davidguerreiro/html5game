@@ -13,6 +13,12 @@ function Hero( game, x, y ) {
 	// avoid hero to go out of the canvas element
 	this.body.collideWorldBounds = true;
 
+	// enable animations
+	this.animations.add( 'stop', [0] );
+	this.animations.add( 'run', [1, 2], 8, true ); // 8 fps looped
+	this.animations.add( 'jump', [3] );
+	this.animations.add( 'fall', [4] );
+
 }
 
 /**
@@ -47,6 +53,24 @@ Spider.prototype.constructor = Spider;
 Hero.prototype             = Object.create( Phaser.Sprite.prototype );
 Hero.prototype.constructor =  Hero;
 
+/**
+ * Check which animation has to be displayed
+ *
+ * @return {String} name
+ */
+Hero.prototype._getAnimationName = function() {
+	let name = 'stop'; // default animation
+
+	if ( this.body.velocity.y < 0 )
+		name = 'jump'; // jumping
+  else if( this.body.velocity.y >= 0 && !this.body.touching.down )
+		name = 'fall'; // failing
+	else if( this.body.velocity.x !== 0 && this.body.touching.down )
+		name = 'run'; // running
+
+  return name;
+};
+
 Hero.prototype.move = function( direction ) {
 
 	/**
@@ -61,6 +85,25 @@ Hero.prototype.move = function( direction ) {
 	 */
 	// this.x += direction * 2.5; // 2.5 pixels each frame
 	
+	// flip the character direction applying a negative scale to the hero image
+	if( this.body.velocity.x < 0 )
+		this.scale.x = -1;
+	else if ( this.body.velocity.x > 0 )
+    this.scale.x = 1;
+	
+};
+
+/**
+ * Hero update method to check which animation should
+ * we display every frame
+ * 
+ */
+Hero.prototype.update = function() {
+	// update sprite animation, if it need changing
+	let animationName = this._getAnimationName();
+
+	if( this.animations.name !== animationName )
+		this.animations.play( animationName );
 };
 
 /**
@@ -217,8 +260,11 @@ PlayState._onHeroVsEnemy = function( hero, enemy ) {
 // load game assets here
 PlayState.preload = function() {
 
-	// load hero image
-	this.game.load.image( 'hero', 'images/hero_stopped.png' );
+	/**
+	 * Load hero image - Static image is commmented
+	 * after adding sprites to animate the main hero
+	 */
+	// this.game.load.image( 'hero', 'images/hero_stopped.png' );
 
 	// preload background image
 	this.game.load.image( 'background', 'images/background.png' );
@@ -244,6 +290,9 @@ PlayState.preload = function() {
 
   // fonts
   this.game.load.image( 'font:numbers', 'images/numbers.png');
+
+  // hero
+  this.game.load.spritesheet( 'hero', 'images/hero.png', 36, 42 );
 
   // spiders
   this.game.load.spritesheet( 'spider', 'images/spider.png', 42, 32 );
