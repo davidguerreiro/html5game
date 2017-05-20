@@ -161,7 +161,7 @@ PlayState         = {};
 const LEVEL_COUNT = 2;
 
 // playstate init
-PlayState.init = function() {
+PlayState.init = function( data ) {
   this.keys = this.game.input.keyboard.addKeys({
      left  : Phaser.KeyCode.LEFT,
      right : Phaser.KeyCode.RIGHT,
