@@ -316,7 +316,7 @@ PlayState._goToNextLevel = function() {
 	this.camera.onFadeComplete.addOnce( function () {
     // go to the next level
 	 this.game.state.restart( true, false, { level: this.level + 1 } );
-	});
+	}, this);
 }
 
 // load game assets here
