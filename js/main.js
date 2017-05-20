@@ -413,17 +413,17 @@ PlayState._createHud = function() {
  const NUMBERS_STR = '0123456789X ';
  this.coinFont     = this.game.add.retroFont( 'font:numbers', 20, 26, NUMBERS_STR, 6 );
 
- // make the game to create the image using the icon coin.
- // The parameters are the screen coordinates
- // original coin Icon coordenates removed when the key icon was added
- // let coinIcon      = this.game.make.image( 0 , 0, 'icon:coin' );
-   let coinIcon = this.game.make.image( this.keyIcon.width + 7, 0, 'icon:coin' );
-
  /**
   * Add key icon
   */
  this.keyIcon = this.game.make.image( 0, 19, 'icon:key' );
  this.keyIcon.anchor.set( 0, 0.5 );
+
+ // make the game to create the image using the icon coin.
+ // The parameters are the screen coordinates
+ // original coin Icon coordenates removed when the key icon was added
+ // let coinIcon      = this.game.make.image( 0 , 0, 'icon:coin' );
+   let coinIcon = this.game.make.image( this.keyIcon.width + 7, 0, 'icon:coin' );
 
  /**
   * Make the game to add the score image
@@ -533,7 +533,7 @@ PlayState._spawnKey = function( x, y ) {
 	// add an small 'up & down' animation via tween
 	this.key.y -= 3;
 	this.game.add.tween( this.key )
-	 .to( { y: this.key.y + 6 }, 800. Phaser.Easing.Sinusoidal.InOut )
+	 .to( { y: this.key.y + 6 }, 800, Phaser.Easing.Sinusoidal.InOut )
 	 .yoyo( true )
 	 .loop()
 	 .start();
