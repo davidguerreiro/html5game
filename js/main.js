@@ -441,7 +441,7 @@ PlayState._createHud = function() {
  this.hud.add( coinIcon );
  this.hud.position.set( 10, 10 );
  this.hud.add( coinScoreImg );
- this.huD.add( this.keyIcon );
+ this.hud.add( this.keyIcon );
 
 };
 
