@@ -138,6 +138,12 @@ Spider.prototype.update = function() {
 	else if( this.body.touching.left || this.body.blocked.left )
 		this.body.velocity.x = Spider.SPEED;  // turn right
 
+	// change spider scale to change orientation
+	if( this.body.velocity.x < 0 )
+		this.scale.x = 1;
+	else if( this.body.velocity.x > 0 )
+		this.scale.x = -1;
+
 };
 
 /**
@@ -162,7 +168,6 @@ PlayState.init = function() {
   });
   
   // activate sound when jumping
-  
   this.keys.up.onDown.add( function() {
     let didJump = this.hero.jump();
     if( didJump )
@@ -174,6 +179,9 @@ PlayState.init = function() {
 
   // coins pickup count
   this.coinPickupCount = 0;
+
+  // store key possesed status
+  this.hasKey = false;
 };
 
 // update game state
@@ -204,6 +212,9 @@ PlayState._handleCollisions = function() {
 
   // add overlap when hero and spiders collide each other
   this.game.physics.arcade.overlap( this.hero, this.spiders, this._onHeroVsEnemy, null, this );
+
+  // add overlap between the hero and the key
+  this.game.physics.arcade.overlap( this.hero, this.key, this._onHeroVsKey, null, this );
 
 };
 
@@ -257,6 +268,13 @@ PlayState._onHeroVsEnemy = function( hero, enemy ) {
 
 };
 
+// method which defines the logic when the hero overlaps the key - so the key is picked up
+PlayState._onHeroVsKey = function( hero, key ) {
+	this.sfx.key.play();
+	key.kill();
+	this.hasKey = true;
+}
+
 // load game assets here
 PlayState.preload = function() {
 
@@ -284,6 +302,8 @@ PlayState.preload = function() {
   this.game.load.audio( 'sfx:jump', 'audio/jump.wav' );
   this.game.load.audio( 'sfx:coin', 'audio/coin.wav' );
   this.game.load.audio( 'sfx:stomp', 'audio/stomp.wav' );
+  this.game.load.audio( 'sfx:key', 'audio/key.wav' );
+  this.game.load.audio( 'sfx:door', 'audio/door.wav' );
 
   // coins
   this.game.load.spritesheet( 'coin', 'images/coin_animated.png', 22, 22 );
@@ -310,9 +330,11 @@ PlayState.create = function() {
 
 	// create sound entities
 	this.sfx = {
-		jump : this.game.add.audio( 'sfx:jump' ),
-		coin : this.game.add.audio( 'sfx:coin' ),
-		stomp : this.game.add.audio( 'sfx:stomp' )
+		jump  : this.game.add.audio( 'sfx:jump' ),
+		coin  : this.game.add.audio( 'sfx:coin' ),
+		stomp : this.game.add.audio( 'sfx:stomp' ),
+		key   : this.game.add.audio( 'sfx:key'),
+		door  : this.game.add.audio( 'sfx:door' )
 	};
 
 	// create background image
