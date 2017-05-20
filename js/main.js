@@ -275,9 +275,9 @@ PlayState._onHeroVsEnemy = function( hero, enemy ) {
   	this.sfx.stomp.play();   // dispaly the stomp sound
   }
   else {
-  	//game over -> restart the game
+  	//game over -> restart the game in the current level
     this.sfx.stomp.play(); 
-    this.game.state.restart();
+    this.game.state.restart( true, false, {level : this.level } );
   }
 
 };
@@ -292,8 +292,8 @@ PlayState._onHeroVsKey = function( hero, key ) {
 // logic when the hero overlaps the door - so the door opens
 PlayState._onHeroVsDoor = function( hero, door ) {
 	this.sfx.door.play();
-	this.game.state.restart();
-	// TODO : go to the next level instead
+	 // go to the next level
+	 this.game.state.restart( true, false, { level: this.level + 1 } );
 }
 
 // load game assets here
