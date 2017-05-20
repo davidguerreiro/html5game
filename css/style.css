@@ -6,3 +6,39 @@ body {
 	font-family: 'Source Sans Pro', sans-serif;
 	font-size: 18px;
 }
+
+.main-nav {
+	width: 100%;
+	background-color: #601BBD;
+	overflow: hidden;
+	clear: both;
+}
+
+.main-nav__list {
+	margin: 0;
+	padding: 0;
+	float: right;
+}
+
+.main-nav__list li {
+	display: inline-block;
+}
+
+.main-nav__list li a {
+	font-size: 20px;
+	display: block;
+	color: white;
+	text-decoration: none;
+	padding: 15px 20px;
+	-webkit-transition: background-color 1s ease;
+  -ms-transition: background-color 1s ease;
+  transition: background-color 1s ease;
+}
+
+.main-nav__list li a:hover{
+  background-color: #260A4A;	
+}
+
+.main-nav__list li a i {
+	padding-right: 8px;
+}
