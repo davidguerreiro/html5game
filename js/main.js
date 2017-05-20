@@ -208,6 +208,11 @@ PlayState.update = function() {
 
 	// display the key icon if the player has the icon
 	this.keyIcon.frame = this.hasKey ? 1 : 0;
+};
+
+// this method stops the bgm when a level is complete
+PlayState.shutdown = function() {
+  this.bgm.stop();
 }
 
 // manage collisions
