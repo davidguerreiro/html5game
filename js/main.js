@@ -128,14 +128,20 @@ PlayState.init = function() {
 
 
   this.game.renderer.renderSession.roundPixels = true;
+
+  // coins pickup count
+  this.coinPickupCount = 0;
 };
 
 // update game state
 PlayState.update = function() {
+
   // handle collisions
   this._handleCollisions();
 	// handle key inputs
 	this._handleInput();
+	// update coin count when the player collects a coin
+	this.coinFont.text = 'x' + this.coinPickupCount;
 }
 
 // manage collisions
@@ -226,6 +232,7 @@ PlayState.preload = function() {
   this.game.load.image( 'grass:2x1', 'images/grass_2x1.png' );
   this.game.load.image( 'grass:1x1', 'images/grass_1x1.png' );
   this.game.load.image( 'invisible-wall', 'images/invisible_wall.png' );
+  this.game.load.image( 'icon:coin', 'images/coin_icon.png' );
 
   // audio
   this.game.load.audio( 'sfx:jump', 'audio/jump.wav' );
@@ -234,6 +241,9 @@ PlayState.preload = function() {
 
   // coins
   this.game.load.spritesheet( 'coin', 'images/coin_animated.png', 22, 22 );
+
+  // fonts
+  this.game.load.image( 'font:numbers', 'images/numbers.png');
 
   // spiders
   this.game.load.spritesheet( 'spider', 'images/spider.png', 42, 32 );
@@ -255,6 +265,9 @@ PlayState.create = function() {
 
 	// create level 1 data
 	this._loadLevel( this.game.cache.getJSON( 'level:1' ) );
+
+	// add Hud
+	this._createHud();
 }
 
 /**
@@ -285,6 +298,39 @@ PlayState._loadLevel = function( data ) {
 
 	// make enemy walls invisible
 	this.enemyWalls.visible = false;
+};
+
+/**
+ * Render Hud ( User Interface Elements )
+ */
+PlayState._createHud = function() {
+ 
+ /**
+  * When adding a retrofont , we need to specify 'what'
+  * the retrofont contains
+  */
+ const NUMBERS_STR = '0123456789X ';
+ this.coinFont     = this.game.add.retroFont( 'font:numbers', 20, 26, NUMBERS_STR, 6 );
+
+ // make the game to create the image using the icon coin.
+ // The parameters are the screen coordinates
+ let coinIcon      = this.game.make.image( 0 , 0, 'icon:coin' );
+
+ /**
+  * Make the game to add the score image
+  *
+  * Remember to do this to add retro fonts
+  */
+ let coinScoreImg  = this.game.make.image( coinIcon.x + coinIcon.width, coinIcon.height / 2, 
+ 	                   this.coinFont );
+ coinScoreImg.anchor.set( 0 , 0.5 );
+
+ this.hud = this.game.add.group();
+ this.hud.add( coinIcon );
+ this.hud.position.set( 10, 10 );
+ this.hud.add( coinScoreImg );
+
+
 };
 
 // spawn coins
@@ -357,6 +403,7 @@ PlayState._spawnCharacters = function( data ) {
 PlayState._onHeroVsCoin = function( hero, coin ) {
 	this.sfx.coin.play();
 	coin.kill();
+	this.coinPickupCount++;
 };
 
 // init phaser
