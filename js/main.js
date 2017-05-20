@@ -350,10 +350,16 @@ PlayState.preload = function() {
   // key icon for HUD
   this.game.load.spritesheet( 'icon:key', 'images/key_icon.png', 34, 30 );
 
+  // bgm
+  this.game.load.audio( 'bgm', ['audio/bgm.mp3', 'audio/bgm.ogg'] );
+
 };
 
 // create game entities and set up world here
 PlayState.create = function() {
+
+	// fade in ( from black )
+	this.camera.flash( '#000000' );
 
 	// create sound entities
 	this.sfx = {
@@ -363,6 +369,10 @@ PlayState.create = function() {
 		key   : this.game.add.audio( 'sfx:key'),
 		door  : this.game.add.audio( 'sfx:door' )
 	};
+
+	// add bmg
+	this.bgm = this.game.add.audio( 'bgm');
+	this.bgm.loopFull();
 
 	// create background image
 	this.game.add.image( 0, 0, 'background' );
