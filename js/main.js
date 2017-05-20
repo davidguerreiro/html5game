@@ -128,6 +128,14 @@ Hero.prototype.bounce = function() {
 }
 
 /**
+ * Add animation to 'freeze' the hero when it enters the door
+ */
+Hero.prototype.freeze = function() {
+	this.body.enable = false;
+	this.isFrozen    = true;
+}
+
+/**
  * Spiders turaround
  */
 Spider.prototype.update = function() {
