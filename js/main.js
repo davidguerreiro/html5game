@@ -313,7 +313,7 @@ PlayState._onHeroVsDoor = function( hero, door ) {
 // go to the next level method
 PlayState._goToNextLevel = function() {
 	this.camera.fade( '#000000' );
-	this.camera.onFadeComplete.addOnce( function ( data ) {
+	this.camera.onFadeComplete.addOnce( function () {
     // go to the next level
 	 this.game.state.restart( true, false, { level: this.level + 1 } );
 	});
