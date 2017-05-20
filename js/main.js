@@ -291,9 +291,24 @@ PlayState._onHeroVsKey = function( hero, key ) {
 
 // logic when the hero overlaps the door - so the door opens
 PlayState._onHeroVsDoor = function( hero, door ) {
+	// open the door by changing its graphic and playing a sfx
+	door.frame = 1;;
 	this.sfx.door.play();
-	 // go to the next level
+
+	// play 'enter door' animation and change to the next level when it ends
+	hero.freeze();
+	this.game.add.tween( hero )
+	  .to({x: this.door.x, alpha: 0}, 500, null, true)
+	  .onComplete.addOnce(this._goToNextLevel, this);
+};
+
+// go to the next level method
+PlayState._goToNextLevel = function() {
+	this.camera.fade( '#000000' );
+	this.camera.onFadeComplete.addOnce( function ( data ) {
+    // go to the next level
 	 this.game.state.restart( true, false, { level: this.level + 1 } );
+	});
 }
 
 // load game assets here
