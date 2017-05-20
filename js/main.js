@@ -300,6 +300,9 @@ PlayState.preload = function() {
   // door
   this.game.load.spritesheet( 'door', 'images/door.png', 42, 66 );
 
+  // key
+  this.game.load.image( 'key', 'images/key.png' );
+
 };
 
 // create game entities and set up world here
@@ -346,6 +349,7 @@ PlayState._loadLevel = function( data ) {
 	// spawn important objects
   data.coins.forEach( this._spawnCoin, this );
   this._spawnDoor( data.door.x, data.door.y );
+  this._spawnKey( data.key.x, data.key.y );
 
 	// enable gravity here
 	this.game.physics.arcade.gravity.y = GRAVITY;
@@ -461,6 +465,16 @@ PlayState._spawnDoor = function( x, y ) {
    // enable physics
    this.game.physics.enable( this.door );
    this.door.body.allowGravity = false;
+};
+
+// spawn key and add physcs to it
+PlayState._spawnKey = function( x, y ) {
+	this.key = this.bgDecoration.create(x, y, 'key' );
+	this.key.anchor.set( 0.5, 0.5 );
+
+	// enable physics
+	this.game.physics.enable( this.key );
+	this.key.body.allowGravity = false;
 };
 
 // tiggered when the hero overlaps a coin
